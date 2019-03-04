@@ -75,6 +75,7 @@ exports.notice = (comment) => {
     
     req.on('error', (e) => {
         console.error(e);
+        console.error(WeChatOptions);
     });
 
     req.end();   
