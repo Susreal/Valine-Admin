@@ -61,12 +61,12 @@ exports.notice = (comment) => {
     //Wechat notice
     let wechatContent = {
         text: emailSubject,
-        desp: emailContent
+        desp: 'emailContent'
     }
     let WeChatUrl = WECHAT_NOTICE_URL + '?' + querystring.stringify(wechatContent);
     let req = https.get(WeChatUrl, (res) => {
-        console.log('statusCode:', res.statusCode);
-        console.log('headers:', res.headers);
+        //console.log('statusCode:', res.statusCode);
+        //console.log('headers:', res.headers);
       
         res.on('data', (d) => {
           //process.stdout.write(d);
