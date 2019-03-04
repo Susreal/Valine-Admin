@@ -65,7 +65,7 @@ exports.notice = (comment) => {
     }
     let WeChatOptions = {
         hostname: WECHAT_NOTICE_URL,
-        path: '/' + querystring.stringify(wechatContent),
+        path: '?' + querystring.stringify(wechatContent),
         method: 'GET'
     };
     let req = https.request(WeChatOptions, (res) => {
@@ -79,6 +79,7 @@ exports.notice = (comment) => {
     
     req.on('error', (e) => {
         console.error(e);
+        console.error(WeChatOptions);
     });
 
     req.end();   
