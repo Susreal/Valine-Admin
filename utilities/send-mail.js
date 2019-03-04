@@ -60,8 +60,8 @@ exports.notice = (comment) => {
 
     //Wechat notice
     let wechatContent = {
-        text: emailSubject,
-        desp: emailContent
+        text: 'emailSubject',
+        desp: 'emailContent'
     }
     let WeChatOptions = {
         hostname: WECHAT_NOTICE_URL,
