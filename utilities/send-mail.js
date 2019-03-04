@@ -2,7 +2,6 @@
 const nodemailer = require('nodemailer');
 const https = require('https');
 const querystring = require('querystring');
-const dns = require('dns');
 
 let config = {
     auth: {
@@ -60,27 +59,12 @@ exports.notice = (comment) => {
     });
 
     //Wechat notice
-    dns.lookup('sc.ftqq.com', function onLookup(err, address, family) {
-        console.log('ip 地址:', address);
-        dns.reverse(address, function (err, hostnames) {
-        if (err) {
-           console.log(err.stack);
-        }
-     
-        console.log('反向解析ftqq ' + address + ': ' + JSON.stringify(hostnames));
-     });  
-     });
-
     let wechatContent = {
-        text: 'emailSubject',
-        desp: 'emailContent'
+        text: emailSubject,
+        desp: emailContent
     }
-    let WeChatOptions = {
-        hostname: WECHAT_NOTICE_URL + '?' + querystring.stringify(wechatContent),
-        //path: '?' + querystring.stringify(wechatContent),
-        method: 'GET'
-    };
-    let req = https.request(WeChatOptions, (res) => {
+    let WeChatUrl = WECHAT_NOTICE_URL + '?' + querystring.stringify(wechatContent);
+    let req = https.get(WeChatUrl, (res) => {
         console.log('statusCode:', res.statusCode);
         console.log('headers:', res.headers);
       
@@ -91,7 +75,6 @@ exports.notice = (comment) => {
     
     req.on('error', (e) => {
         console.error(e);
-        console.error(WeChatOptions);
     });
 
     req.end();   
