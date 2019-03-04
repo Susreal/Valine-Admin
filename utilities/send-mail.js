@@ -1,6 +1,7 @@
 'use strict';
 const nodemailer = require('nodemailer');
 const https = require('https');
+var querystring = require('querystring'); 
 
 let config = {
     auth: {
@@ -58,11 +59,14 @@ exports.notice = (comment) => {
     });
 
     //Wechat notice
+    let wechatContent = {
+        text: emailSubject,
+        desp: emailContent
+    }
     let WeChatOptions = {
         hostname: WECHAT_NOTICE_URL,
-        method: 'GET',
-        text: 'emailSubject',
-        desp: 'emailContent'
+        path: '/' + querystring.stringify(wechatContent),
+        method: 'GET'
     };
     let req = https.request(WeChatOptions, (res) => {
         console.log('statusCode:', res.statusCode);
