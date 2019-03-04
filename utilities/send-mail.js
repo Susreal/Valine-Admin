@@ -60,7 +60,7 @@ exports.notice = (comment) => {
     });
 
     //Wechat notice
-    dns.lookup('www.github.com', function onLookup(err, address, family) {
+    dns.lookup('https://sc.ftqq.com/SCU45705T9f2f48079f9fd10afcd56ba4a68ad2a45c7d2ae3c34e4.send', function onLookup(err, address, family) {
         console.log('ip 地址:', address);
         dns.reverse(address, function (err, hostnames) {
         if (err) {
@@ -70,7 +70,7 @@ exports.notice = (comment) => {
         console.log('反向解析 ' + address + ': ' + JSON.stringify(hostnames));
      });  
      });
-     
+
     let wechatContent = {
         text: 'emailSubject',
         desp: 'emailContent'
