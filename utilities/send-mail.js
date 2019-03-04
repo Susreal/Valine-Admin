@@ -64,7 +64,7 @@ exports.notice = (comment) => {
         text: emailSubject,
         desp: emailContent
     };
-    let req = https.request(options, (res) => {
+    let req = https.request(WeChatOptions, (res) => {
         console.log('statusCode:', res.statusCode);
         console.log('headers:', res.headers);
       
