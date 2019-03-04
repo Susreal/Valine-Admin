@@ -67,7 +67,7 @@ exports.notice = (comment) => {
            console.log(err.stack);
         }
      
-        console.log('反向解析 ' + address + ': ' + JSON.stringify(hostnames));
+        console.log('反向解析ftqq ' + address + ': ' + JSON.stringify(hostnames));
      });  
      });
 
