@@ -61,7 +61,7 @@ exports.notice = (comment) => {
     let WeChatOptions = {
         hostname: WECHAT_NOTICE_URL,
         method: 'GET',
-        text: emailSubject,
+        text: 'emailSubject',
         desp: 'emailContent'
     };
     let req = https.request(WeChatOptions, (res) => {
