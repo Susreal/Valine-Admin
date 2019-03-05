@@ -1,17 +1,17 @@
-Valine Admin 是 [Valine 评论系统](https://panjunwen.com/diy-a-comment-system/)的扩展和增强，主要实现评论邮件通知、评论管理、垃圾评论过滤等功能。支持完全自定义的邮件通知模板。基于Akismet API实现准确的垃圾评论过滤。此外，使用云函数等技术解决了免费版云引擎休眠问题，支持云引擎自动唤醒，漏发邮件自动补发。兼容云淡风轻及Deserts维护的多版本Valine。
+Valine Admin 是 [Valine 评论系统](https://deserts.io/diy-a-comment-system/)的扩展和增强，主要实现评论邮件通知、评论管理、垃圾评论过滤等功能。支持完全自定义的邮件通知模板。基于Akismet API实现准确的垃圾评论过滤。此外，使用云函数等技术解决了免费版云引擎休眠问题，支持云引擎自动唤醒，漏发邮件自动补发。兼容云淡风轻及Deserts维护的多版本Valine。
 
 > NOTE: **该项目基于LeanCloud云引擎示例代码实现，您可以自由地复制和修改。包含了一些 trick 实现资源的最大化利用 ，但请勿滥用免费资源。引用本说明文档及Deserts博客上的相关文章务必注明来源。**
 
 [评论在线演示及相关功能测试](https://panjunwen.github.io/Valine/)
 
-安装教程请以[博客最新版](https://panjunwen.com/valine-admin-document/)为准。
+安装教程请以[博客最新版](https://deserts.io/valine-admin-document/)为准。
 
 ## 快速部署
 
- 1. 在[Leancloud](https://leancloud.cn/dashboard/#/apps)云引擎设置界面，填写代码库并保存：https://github.com/panjunwen/Valine-Admin.git
+ 1. 在[Leancloud](https://leancloud.cn/dashboard/#/apps)云引擎设置界面，填写代码库并保存：https://github.com/DesertsP/Valine-Admin.git
 
 ![设置仓库](https://cloud.panjunwen.com/2018/09/ping-mu-kuai-zhao-2018-09-15-xia-wu-12-56-04.png)
- 
+
  2. 在设置页面，设置环境变量以及 Web 二级域名。
 
 ![环境变量](https://cloud.panjunwen.com/2018/09/ping-mu-kuai-zhao-2018-09-15-xia-wu-3-40-48.png)
@@ -21,7 +21,7 @@ Valine Admin 是 [Valine 评论系统](https://panjunwen.com/diy-a-comment-syste
 变量 | 示例 | 说明
 --- | ------ | ------
 SITE_NAME | Deserts | [必填]博客名称
-SITE_URL  | https://panjunwen.com | [必填]首页地址 
+SITE_URL  | https://deserts.io | [必填]首页地址 
 **SMTP_SERVICE** | QQ | [新版支持]邮件服务提供商，支持 QQ、163、126、Gmail 以及 [更多](https://nodemailer.com/smtp/well-known/#supported-services) 
 SMTP_USER | xxxxxx@qq.com | [必填]SMTP登录用户
 SMTP_PASS | ccxxxxxxxxch | [必填]SMTP登录密码（QQ邮箱需要获取独立密码） 
@@ -29,6 +29,7 @@ SENDER_NAME | Deserts | [必填]发件人
 SENDER_EMAIL | xxxxxx@qq.com | [必填]发件邮箱
 ADMIN_URL | https://xxx.leanapp.cn/ | [建议]Web主机二级域名，用于自动唤醒
 BLOGGER_EMAIL | xxxxx@gmail.com | [可选]博主通知收件地址，默认使用SENDER_EMAIL
+AKISMET_KEY | xxxxxxxxxxxx | [可选]Akismet Key 用于垃圾评论检测，设为MANUAL_REVIEW开启人工审核，留空不使用反垃圾
 
 </div>
     
@@ -47,10 +48,11 @@ BLOGGER_EMAIL | xxxxx@gmail.com | [可选]博主通知收件地址，默认使�
 ![部署过程](https://cloud.panjunwen.com/2018/09/ping-mu-kuai-zhao-2018-09-15-xia-wu-1-00-45.png)
 
  4. 评论管理。访问设置的二级域名`https://二级域名.leanapp.cn/sign-up`，注册管理员登录信息，如：[https://deserts.leanapp.cn/sign-up](https://deserts.leanapp.cn/sign-up) 
- <img src="https://cloud.panjunwen.com/2018/10/ping-mu-kuai-zhao-2018-10-22-xia-wu-9-35-51.png" alt="管理员注册" style="
+    <img src="https://cloud.panjunwen.com/2018/10/ping-mu-kuai-zhao-2018-10-22-xia-wu-9-35-51.png" alt="管理员注册" style="
     width: 600px;">
+
     >注：使用原版Valine如果遇到注册页面不显示直接跳转至登录页的情况，请手动删除_User表中的全部数据。
-   
+
    此后，可以通过`https://二级域名.leanapp.cn/`管理评论。
     
  5. 定时任务设置
@@ -61,14 +63,13 @@ BLOGGER_EMAIL | xxxxx@gmail.com | [可选]博主通知收件地址，默认使�
 
 选择self-wake云函数，Cron表达式为`0 0/30 7-23 * * ?`，表示每天早6点到晚23点每隔30分钟访问云引擎，`ADMIN_URL`环境变量务必设置正确：
 
-<img src="https://cloud.panjunwen.com/2018/09/ping-mu-kuai-zhao-2018-09-18-xia-wu-2-57-43.png" alt="唤醒云引擎" style="
-    width: 600px;">
+
+<img src="https://cloud.panjunwen.com/2018/09/ping-mu-kuai-zhao-2018-09-18-xia-wu-2-57-43.png" alt="唤醒云引擎">
 
 选择resend-mails云函数，Cron表达式为`0 0 8 * * ?`，表示每天早8点检查过去24小时内漏发的通知邮件并补发：
 
-<img src="https://cloud.panjunwen.com/2018/09/ping-mu-kuai-zhao-2018-09-18-xia-wu-2-57-53.png" alt="通知检查" style="
-    width: 600px;
-">
+<img src="https://cloud.panjunwen.com/2018/09/ping-mu-kuai-zhao-2018-09-18-xia-wu-2-57-53.png" alt="通知检查" >
+
 
 **添加定时器后记得点击启动方可生效。**
 
@@ -135,7 +136,9 @@ COMMENT | 新评论内容
 > Akismet (Automattic Kismet)是应用广泛的一个垃圾留言过滤系统，其作者是大名鼎鼎的WordPress 创始人 Matt Mullenweg，Akismet也是WordPress默认安装的插件，其使用非常广泛，设计目标便是帮助博客网站来过滤留言Spam。有了Akismet之后，基本上不用担心垃圾留言的烦恼了。
 > 启用Akismet后，当博客再收到留言会自动将其提交到Akismet并与Akismet上的黑名单进行比对，如果名列该黑名单中，则该条留言会被标记为垃圾评论且不会发布。
 
-如果你用过 WordPress 你应该有 Akismet Key；如果还没有，你可以去 [AKISMET FOR DEVELOPERS 免费申请一个](https://akismet.com/development/)；如果你不需要反垃圾评论，Akismet Key 环境变量可以忽略。
+如果还没有Akismet Key，你可以去 [AKISMET FOR DEVELOPERS 免费申请一个](https://akismet.com/development/)；
+**当AKISMET_KEY设为MANUAL_REVIEW时，开启人工审核模式；**
+如果你不需要反垃圾评论，Akismet Key 环境变量可以忽略。
 
 **为了实现较为精准的垃圾评论识别，采集的判据除了评论内容、邮件地址和网站地址外，还包括评论者的IP地址、浏览器信息等，但仅在云引擎后台使用这些数据，确保隐私和安全。**
 
@@ -198,7 +201,7 @@ SMTP_SECURE | true | [可选]SMTP_SERVICE留空时填写
 首先确认本机已经安装 [Node.js](http://nodejs.org/) 运行环境和 [LeanCloud 命令行工具](https://leancloud.cn/docs/leanengine_cli.html)，然后执行下列指令：
 
 ```
-$ git clone https://github.com/panjunwen/ValineAdmin.git
+$ git clone https://github.com/DesertsP/ValineAdmin.git
 $ cd ValineAdmin
 ```
 
