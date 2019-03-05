@@ -49,12 +49,12 @@ exports.notice = (comment) => {
     };
 
     //Wechat notice
+    let wechatContent = {
+        text: eval('`收到新留言！`'),
+        desp: eval('`『${NICK}』留言如下：${COMMENT}` [查看完整内容>>](${POST_URL})')
+    }
     if (process.env.WECHAT_SCKEY != null) {
-        let WECHAT_NOTICE_URL = 'https://sc.ftqq.com/' + process.env.WECHAT_SCKEY + '.send';
-        let wechatContent = {
-            text: eval('`收到新留言！`'),
-            desp: eval('`『${NICK}』留言如下：${COMMENT}` [查看完整内容>>](${POST_URL})')
-        }
+        let WECHAT_NOTICE_URL = 'https://sc.ftqq.com/' + process.env.WECHAT_SCKEY + '.send'; 
         let WeChatUrl = WECHAT_NOTICE_URL + '?' + querystring.stringify(wechatContent);
         let req = https.get(WeChatUrl, (res) => {
             //console.log('statusCode:', res.statusCode);
