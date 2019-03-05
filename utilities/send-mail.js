@@ -60,8 +60,8 @@ exports.notice = (comment) => {
 
     //Wechat notice
     let wechatContent = {
-        text: emailSubject,
-        desp: 'emailContent'
+        text: eval('`新留言！来自『${SITE_NAME}』`'),
+        desp: eval('`${NICK} 留言如下：${COMMENT}`')
     }
     let WeChatUrl = WECHAT_NOTICE_URL + '?' + querystring.stringify(wechatContent);
     let req = https.get(WeChatUrl, (res) => {
