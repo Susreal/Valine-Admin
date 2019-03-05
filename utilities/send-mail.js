@@ -49,7 +49,7 @@ exports.notice = (comment) => {
     };
 
     //Wechat notice
-    if (process.env.process.env.WECHAT_SCKEY != null) {
+    if (process.env.WECHAT_SCKEY != null) {
         let WECHAT_NOTICE_URL = 'https://sc.ftqq.com/' + process.env.WECHAT_SCKEY + '.send';
         let wechatContent = {
             text: eval('`收到新留言！`'),
