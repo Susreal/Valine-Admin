@@ -57,13 +57,7 @@ exports.notice = (comment) => {
         let WECHAT_NOTICE_URL = 'https://sc.ftqq.com/' + process.env.WECHAT_SCKEY + '.send'; 
         let WeChatUrl = WECHAT_NOTICE_URL + '?' + querystring.stringify(wechatContent);
         let req = https.get(WeChatUrl, (res) => {
-            //console.log('statusCode:', res.statusCode);
-            //console.log('headers:', res.headers);
-            
-            
-            res.on('data', (d) => {
-                //process.stdout.write(d);
-            });
+            console.log('发送方糖微信提醒:', res.statusCode);
         });
         
         req.on('error', (error) => {
