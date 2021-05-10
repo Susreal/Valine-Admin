@@ -55,8 +55,8 @@ exports.notice = (comment) => {
         //     desp: eval('`『${NICK}』留言如下：${COMMENT} [查看完整内容>>](${POST_URL})`')
         // }
         let wechatContent = {
-            "msgtype": "text",
-            "text": {
+            "msgtype": "markdown",
+            "markdown": {
                 "content": eval('`『${NICK}』留言如下：${COMMENT} [查看完整内容>>](${POST_URL})`')
             }
         };
@@ -76,11 +76,7 @@ exports.notice = (comment) => {
         let options = {
             hostname: 'qyapi.weixin.qq.com',
             path: '/cgi-bin/webhook/send?key=' + process.env.WECHAT_SCKEY,
-            method: 'POST',
-            // headers: {
-            //     // 'Content-Type': 'application/json',
-            //     // 'Content-Length': postData.length
-            // }
+            method: 'POST'
         };
 
         let req = https.request(options, (res) => {
@@ -91,7 +87,7 @@ exports.notice = (comment) => {
                 _data += chunk;
             });
             res.on('end', function () {
-                console.log("\n--->>\nresult:", _data)
+                console.log("result:", _data)
             });
         });
 
