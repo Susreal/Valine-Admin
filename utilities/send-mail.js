@@ -20,14 +20,14 @@ if (process.env.SMTP_SERVICE != null) {
 
 const transporter = nodemailer.createTransport(config);
 
-transporter.verify(function(error, success) {
+transporter.verify(function (error, success) {
     if (error) {
         console.log('SMTP邮箱配置异常：', error);
     }
     if (success) {
         console.log("SMTP邮箱配置正常！");
     }
-}); 
+});
 
 exports.notice = (comment) => {
     let SITE_NAME = process.env.SITE_NAME;
@@ -50,21 +50,42 @@ exports.notice = (comment) => {
 
     //Wechat notice
     if (process.env.WECHAT_SCKEY != null) {
+        // let wechatContent = {
+        //     text: eval('`收到新留言！`'),
+        //     desp: eval('`『${NICK}』留言如下：${COMMENT} [查看完整内容>>](${POST_URL})`')
+        // }
         let wechatContent = {
-            text: eval('`收到新留言！`'),
-            desp: eval('`『${NICK}』留言如下：${COMMENT} [查看完整内容>>](${POST_URL})`')
-        }
-        let WECHAT_NOTICE_URL = 'https://sc.ftqq.com/' + process.env.WECHAT_SCKEY + '.send'; 
-        let WeChatUrl = WECHAT_NOTICE_URL + '?' + querystring.stringify(wechatContent);
-        let req = https.get(WeChatUrl, (res) => {
-            console.log('发送方糖微信提醒: %s', res.statusCode);
+            "msgtype": "text",
+            "text": {
+                content: eval('`『${NICK}』留言如下：${COMMENT} [查看完整内容>>](${POST_URL})`')
+            }
+        };
+        // let WECHAT_NOTICE_URL = 'https://sc.ftqq.com/' + process.env.WECHAT_SCKEY + '.send'; 
+        // let WeChatUrl = WECHAT_NOTICE_URL + '?' + querystring.stringify(wechatContent);
+        // let req = https.get(WeChatUrl, (res) => {
+        //     console.log('发送方糖微信提醒: %s', res.statusCode);
+        // });
+
+        // req.on('error', (error) => {
+        //     console.error('发送方糖微信提醒失败: %s', error);
+        // });
+        // req.end();
+
+        let options = {
+            hostname: 'qyapi.weixin.qq.com',
+            path: '/cgi-bin/webhook/send?key=' + process.env.WECHAT_SCKEY,
+            method: 'POST'
+        };
+
+        let postData = querystring.stringify(wechatContent);
+
+        let req = https.request(options, (res) => {
+            console.log('发送微信提醒: %s', res.statusCode);
         });
-        
-        req.on('error', (error) => {
-            console.error('发送方糖微信提醒失败: %s', error);
-        });
+
+        req.write(postData);
         req.end();
-    } 
+    }
 
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
@@ -76,7 +97,7 @@ exports.notice = (comment) => {
     });
 }
 
-exports.send = (currentComment, parentComment)=> {
+exports.send = (currentComment, parentComment) => {
     let PARENT_NICK = parentComment.get('nick');
     let SITE_NAME = process.env.SITE_NAME;
     let NICK = currentComment.get('nick');
