@@ -57,7 +57,7 @@ exports.notice = (comment) => {
         let wechatContent = {
             "msgtype": "text",
             "text": {
-                content: eval('`『${NICK}』留言如下：${COMMENT} [查看完整内容>>](${POST_URL})`')
+                "content": eval('`『${NICK}』留言如下：${COMMENT} [查看完整内容>>](${POST_URL})`')
             }
         };
         // let WECHAT_NOTICE_URL = 'https://sc.ftqq.com/' + process.env.WECHAT_SCKEY + '.send'; 
