@@ -71,17 +71,17 @@ exports.notice = (comment) => {
         // });
         // req.end();
 
+        let postData = querystring.stringify(wechatContent);
+
         let options = {
             hostname: 'qyapi.weixin.qq.com',
             path: '/cgi-bin/webhook/send?key=' + process.env.WECHAT_SCKEY,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': wechatContent.length
+                'Content-Length': postData.length
             }
         };
-
-        let postData = querystring.stringify(wechatContent);
 
         let req = https.request(options, (res) => {
             console.log('发送微信提醒: %s', res.statusCode);
