@@ -77,10 +77,10 @@ exports.notice = (comment) => {
             hostname: 'qyapi.weixin.qq.com',
             path: '/cgi-bin/webhook/send?key=' + process.env.WECHAT_SCKEY,
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': postData.length
-            }
+            // headers: {
+            //     // 'Content-Type': 'application/json',
+            //     // 'Content-Length': postData.length
+            // }
         };
 
         let req = https.request(options, (res) => {
