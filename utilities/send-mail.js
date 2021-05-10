@@ -60,7 +60,6 @@ exports.notice = (comment) => {
                 "content": eval('`『${NICK}』留言如下：${COMMENT} [查看完整内容>>](${POST_URL})`')
             }
         };
-        console.log(wechatContent)
         // let WECHAT_NOTICE_URL = 'https://sc.ftqq.com/' + process.env.WECHAT_SCKEY + '.send'; 
         // let WeChatUrl = WECHAT_NOTICE_URL + '?' + querystring.stringify(wechatContent);
         // let req = https.get(WeChatUrl, (res) => {
@@ -73,7 +72,6 @@ exports.notice = (comment) => {
         // req.end();
 
         let postData = JSON.stringify(wechatContent);
-        console.log(postData)
 
         let options = {
             hostname: 'qyapi.weixin.qq.com',
@@ -87,6 +85,7 @@ exports.notice = (comment) => {
 
         let req = https.request(options, (res) => {
             console.log('发送微信提醒: %s', res.statusCode);
+            res.setEncoding('utf8');
             var _data = '';
             res.on('data', function (chunk) {
                 _data += chunk;
