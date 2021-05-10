@@ -85,6 +85,13 @@ exports.notice = (comment) => {
 
         let req = https.request(options, (res) => {
             console.log('发送微信提醒: %s', res.statusCode);
+            var _data = '';
+            res.on('data', function (chunk) {
+                _data += chunk;
+            });
+            res.on('end', function () {
+                console.log("\n--->>\nresult:", _data)
+            });
         });
 
         req.write(postData);
