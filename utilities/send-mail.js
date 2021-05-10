@@ -71,14 +71,14 @@ exports.notice = (comment) => {
         // });
         // req.end();
 
-        let postData = querystring.stringify(wechatContent);
+        let postData = JSON.stringify(wechatContent);
 
         let options = {
             hostname: 'qyapi.weixin.qq.com',
             path: '/cgi-bin/webhook/send?key=' + process.env.WECHAT_SCKEY,
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
                 'Content-Length': postData.length
             }
         };
